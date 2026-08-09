@@ -13,14 +13,22 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: 'gradle'
-      - uses: gradle/actions/setup-gradle@v4
+      
+      - name: Setup Gradle 8.7
+        uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: 8.10.2
+          gradle-version: 8.7
+
+      - name: Regenerate gradlew
+        run: |
+          gradle wrapper --gradle-version 8.7 --distribution-type bin
+          chmod +x ./gradlew
+          ls -lh ./gradlew gradle/wrapper/
 
       - name: Build Debug APK
         env:
           JAVA_TOOL_OPTIONS: "-Djava.awt.headless=true"
-        run: gradle assembleDebug --no-daemon --no-configuration-cache -Djava.awt.headless=true --stacktrace
+        run: ./gradlew assembleDebug --no-daemon --no-configuration-cache -Djava.awt.headless=true --stacktrace
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
