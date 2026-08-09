@@ -1,9 +1,7 @@
-name: Build Dharam Window ERP Release APK
+name: Build Dharam Window ERP APK
 on:
   push:
-    branches:
-      - main
-      - master
+    branches: [ main, master ]
   workflow_dispatch:
 jobs:
   build:
@@ -19,23 +17,13 @@ jobs:
         with:
           gradle-version: 8.10.2
 
-      - name: Make gradlew executable
-        run: chmod +x ./gradlew
-
-      - name: Create dummy keystore for CI
-        run: |
-          keytool -genkey -v -keystore my-upload-key.jks -keyalg RSA -keysize 2048 -validity 10000 -storepass android -keypass android -alias my-upload-key -dname "CN=Dharam Window ERP, OU=Dev, O=Dharam, L=Surat, ST=Gujarat, C=IN"
-          ls -lh my-upload-key.jks
-
-      - name: Build Release APK
+      - name: Build Debug APK
         env:
           JAVA_TOOL_OPTIONS: "-Djava.awt.headless=true"
-          GRADLE_OPTS: "-Djava.awt.headless=true"
-        run: ./gradlew assembleRelease --no-daemon --no-configuration-cache -Djava.awt.headless=true --stacktrace
+        run: gradle assembleDebug --no-daemon --no-configuration-cache -Djava.awt.headless=true --stacktrace
 
-      - name: Upload Release APK
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Dharam-Window-ERP-Release-APK
-          path: app/build/outputs/apk/release/*.apk
-          if-no-files-found: error
+          name: Dharam-Window-ERP-APK
+          path: app/build/outputs/apk/debug/*.apk
