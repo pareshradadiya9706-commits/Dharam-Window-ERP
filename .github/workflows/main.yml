@@ -21,12 +21,19 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+          cache: 'gradle'
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      - name: Make Gradle Wrapper Executable
+        run: chmod +x ./gradlew
+
       - name: Build Release APK
-        run: gradle assembleRelease --stacktrace
+        env:
+          JAVA_TOOL_OPTIONS: "-Djava.awt.headless=true"
+          GRADLE_OPTS: "-Djava.awt.headless=true"
+        run: ./gradlew assembleRelease --no-daemon --no-configuration-cache --stacktrace
 
       - name: Upload Release APK
         uses: actions/upload-artifact@v4
