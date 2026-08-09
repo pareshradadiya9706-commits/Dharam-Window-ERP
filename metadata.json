@@ -1,0 +1,6 @@
+{
+  "name": "Dharam Window ERP",
+  "description": "Dharam Window ERP application for window estimation, billing, expense tracking, and invoice sharing.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

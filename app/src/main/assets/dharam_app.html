@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Dharam Window ERP</title>
+  <style>
+    *, :after, :before {
+      box-sizing: border-box;
+      border: 0 solid #e5e7eb;
+      -webkit-tap-highlight-color: transparent;
+    }
+    :root {
+      --bg: #F6F8FC;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --primary: #4f46e5;
+      --primary-2: #4338ca;
+      --accent: #f97316;
+      --accent-2: #ea580c;
+      --green: #10b981;
+      --red: #ef4444;
+      --border: #f1f5f9;
+      --shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
+      --radius: 20px;
+      --radius-sm: 12px;
+    }
+    body {
+      margin: 0;
+      background: var(--bg);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+      padding-bottom: 90px;
+      overflow-x: hidden;
+    }
+    button, input, select, textarea {
+      font-family: inherit;
+      font-size: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    button { cursor: pointer; }
+    
+    .app-root { min-height: 100vh; }
+    .topbar {
+      position: sticky; top: 0; z-index: 30;
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      background: rgba(246,247,251,.95);
+      border-bottom: 1px solid var(--border);
+    }
+    .topbar-inner {
+      max-width: 980px; margin: auto; padding: 12px 16px;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand-badge {
+      width: 40px; height: 40px; border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      display: grid; place-items: center; color: white; font-weight: 800; font-size: 18px;
+    }
+    .brand h1 { margin: 0; font-size: 18px; font-weight: 800; line-height: 1; letter-spacing: -.02em; }
+    .brand p { margin: 2px 0 0; font-size: 11px; color: var(--muted); }
+    
+    .sync-pill {
+      font-size: 11px; font-weight: 700; padding: 6px 10px; border-radius: 999px;
+      border: 1px solid var(--border); background: white; display: flex; align-items: center; gap: 6px;
+    }
+    .sync-pill.ok { background: #f0fdf4; border-color: #bbf7d0; color: #166534; }
+    
+    .container { max-width: 980px; margin: auto; padding: 14px; }
+    .card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px;
+      margin-bottom: 14px;
+    }
+    .h2 {
+      margin: 0 0 4px; font-size: 18px; font-weight: 700;
+      letter-spacing: -.02em; display: flex; align-items: center; gap: 8px;
+    }
+    .sub { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+    
+    label {
+      font-size: 12px; font-weight: 700; color: #334155;
+      text-transform: uppercase; letter-spacing: .04em; margin-top: 12px; display: block;
+    }
+    .input, select, textarea {
+      width: 100%; margin-top: 6px; padding: 10px 12px;
+      border: 1.5px solid var(--border); border-radius: 12px;
+      background: #fff; font-size: 15px; outline: none; transition: .2s;
+      box-sizing: border-box; min-width: 0; height: 48px; color: var(--text);
+    }
+    textarea.input { height: auto; min-height: 80px; }
+    .input:focus, select:focus, textarea:focus {
+      border-color: var(--primary); box-shadow: 0 0 0 4px rgba(37,99,235,.12);
+    }
+    .custom-input { border: 2px solid #e0e0e0 !important; }
+    .custom-input:focus { border-color: #fd7e14 !important; box-shadow: 0 0 0 4px rgba(253,126,20,.12) !important; }
+    .custom-input.filled { background: #fff8e1 !important; border-color: #fd7e14 !important; }
+    
+    .row-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-items: end; }
+    .row-3col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; align-items: end; }
+    
+    .helper-text {
+      font-size: 11px; color: #64748b; margin-top: 6px; line-height: 1.4;
+      background: #f8fafc; padding: 6px 8px; border-radius: 6px; border: 1px solid #e2e8f0;
+    }
+    .sqft-live {
+      font-size: 12px; font-weight: 700; color: #15803d; background: #f0fdf4;
+      border: 1px solid #bbf7d0; padding: 4px 8px; border-radius: 8px;
+      display: inline-flex; gap: 4px; align-items: center; margin-top: 6px; margin-right: 6px;
+    }
+    .compact-check {
+      display: flex; align-items: center; gap: 8px; background: #f0fdf4;
+      border: 1px solid #bbf7d0; padding: 10px 12px; border-radius: 12px;
+      text-transform: none; font-size: 13px; font-weight: 600; margin-top: 12px;
+      cursor: pointer; user-select: none;
+    }
+    .compact-check input { width: 18px; height: 18px; accent-color: #16a34a; }
+    
+    .badge { display: inline-flex; padding: 4px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; background: #f1f5f9; }
+    
+    .btn {
+      border: none; border-radius: 12px; padding: 12px 14px; font-weight: 700;
+      font-size: 14px; cursor: pointer; transition: .15s; display: inline-flex;
+      align-items: center; justify-content: center; gap: 8px; white-space: nowrap; text-decoration: none;
+    }
+    .btn:active { transform: scale(.98); }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-accent { background: var(--accent); color: white; }
+    .btn-ghost { background: #f1f5f9; color: #0f172a; }
+    .btn-success { background: var(--green); color: white; }
+    .btn-danger { background: var(--red); color: white; }
+    .add-item-btn { width: 100%; height: 48px; font-size: 15px; font-weight: 800; box-shadow: 0 4px 12px rgba(22,163,74,.25); }
+    
+    .table-wrap { overflow: auto; border-radius: 12px; border: 1px solid var(--border); margin-top: 10px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 520px; }
+    th { position: sticky; top: 0; background: #f8fafc; text-align: left; font-size: 11px; text-transform: uppercase; color: #475569; padding: 10px 12px; border-bottom: 1px solid var(--border); }
+    td { padding: 10px 12px; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
+    .empty { padding: 32px 16px; text-align: center; color: var(--muted); }
+    .empty b { color: var(--text); display: block; margin-bottom: 4px; }
+    
+    .pill-adv { font-size: 11px; padding: 6px 10px; border-radius: 999px; background: #fff7ed; border: 1px dashed #fed7aa; cursor: pointer; font-weight: 700; }
+    
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
+      background: rgba(255,255,255,.95); backdrop-filter: blur(16px);
+      border-top: 1px solid var(--border); padding: 6px 6px calc(6px + env(safe-area-inset-bottom));
+      display: flex; justify-content: space-around;
+    }
+    .nav-btn {
+      flex: 1; background: none; border: none; cursor: pointer; display: flex;
+      flex-direction: column; align-items: center; gap: 2px; color: #94a3b8;
+      font-size: 11px; font-weight: 600; padding: 6px 2px; border-radius: 12px;
+    }
+    .nav-btn.act { color: var(--primary); background: #eff6ff; }
+    .nav-btn .ico { font-size: 20px; line-height: 1; }
+    
+    .dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .dash-card { border-radius: 16px; padding: 14px; color: white; }
+    .dash-card b { font-size: 11px; opacity: .9; text-transform: uppercase; letter-spacing: .05em; }
+    .dash-card .amt { font-size: 20px; font-weight: 800; margin-top: 4px; display: block; }
+    .g1 { background: linear-gradient(135deg, #16a34a, #22c55e); }
+    .g2 { background: linear-gradient(135deg, #dc2626, #f87171); }
+    .g3 { background: linear-gradient(135deg, #2563eb, #06b6d4); }
+    .g4 { background: linear-gradient(135deg, #7c3aed, #a78bfa); }
+    
+    .modal {
+      position: fixed; inset: 0; background: rgba(15,23,42,.6); backdrop-filter: blur(6px);
+      z-index: 100; display: grid; place-items: center; padding: 14px;
+    }
+    .modal-card {
+      background: white; border-radius: 20px; width: min(720px, 100%);
+      max-height: 88vh; overflow: auto; padding: 18px; border: 1px solid var(--border);
+    }
+    .search { display: flex; gap: 8px; align-items: center; background: white; border: 1.5px solid var(--border); border-radius: 12px; padding: 8px 12px; }
+    .search input { border: none; outline: none; width: 100%; font-size: 14px; background: transparent; }
+    
+    .bill-shell {
+      width: 800px; max-width: 100%; background: white; margin: auto; padding: 24px;
+      box-sizing: border-box; position: relative;
+    }
+    .watermark {
+      position: absolute; top: 35%; left: 50%; transform: translate(-50%, -50%) rotate(-24deg);
+      font-size: 80px; font-weight: 900; color: rgba(249,115,22,.12); pointer-events: none;
+    }
+    
+    .edit-banner {
+      background: #fff3cd; border: 2px dashed #fd7e14; padding: 10px 12px;
+      border-radius: 12px; margin-bottom: 12px; display: flex; align-items: center;
+      justify-content: space-between; gap: 8px; flex-wrap: wrap;
+    }
+    .edit-banner b { color: #9a3412; font-size: 13px; }
+    .edit-row { outline: 2px solid #f59e0b; background: #fffbeb !important; }
+    .btn-edit-prominent { background: #dbeafe; color: #1e40af; border: 1.5px solid #93c5fd; font-weight: 800; }
+  </style>
+
+  <!-- Local Offline Libraries for PDF and Canvas -->
+  <script src="js/html2canvas.min.js"></script>
+  <script src="js/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <!-- React Dependencies -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+
+  <script type="text/babel">
+    const { useState, useEffect, useMemo, useRef } = React;
+
+    const CATEGORIES = {
+      "Windows": ["Domal", "60mm", "Pona (18x40)", "27mm", "29mm", "32mm", "R40"],
+      "Door": ["Laminate Door", "Aluminium Door", "PVC Door", "WPC Door", "Flush Door"],
+      "Bathroom Louvers": ["Glass Louvers", "Aluminium Louvers", "PVC Louvers"],
+      "Partition": ["Glass Partition", "Aluminium Partition", "WPC Partition"],
+      "Hardware": ["Door Closer", "Sliding Channel", "Lock", "Handle", "Hinges", "Other"],
+      "Repairing": ["Labour", "Lock Change", "Rubber Change", "Bearing Change", "Mesh/Net", "Other"]
+    };
+
+    const Ud = "https://script.google.com/macros/s/AKfycbweiJz5RFFYGiyYzyWArfDPhJ_xO87XiU-yKKHWKoIxPlgxMnBaEvIEjNhJ4_4b3UJJ/exec";
+
+    const escapeHtml = (e = "") => String(e).replace(/[&<>"']/g, (n) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[n] || n);
+    const formatCurrency = (e) => `₹ ${Number(e || 0).toLocaleString("en-IN")}`;
+    const formatNumber = (e) => Number(e || 0).toLocaleString("en-IN");
+    const getFormattedDate = () => new Date().toLocaleDateString("en-GB").replace(/\//g, "-");
+    const getTodayDate = () => new Date().toLocaleDateString("en-GB");
+
+    const getStored = (key, fallback) => {
+      try {
+        const item = localStorage.getItem(key);
+        return item ? JSON.parse(item) : fallback;
+      } catch {
+        return fallback;
+      }
+    };
+
+    function App() {
+      const [shopName, setShopName] = useState(() => localStorage.getItem("shopName") || "DHARAM WINDOW");
+      const [shopMobile, setShopMobile] = useState(() => localStorage.getItem("shopMobile") || "99999 00000");
+      const [shopAddress, setShopAddress] = useState(() => localStorage.getItem("shopAddress") || "Sumul Dairy Road, Surat, Gujarat - 395008");
+      const [shopGst, setShopGst] = useState(() => localStorage.getItem("shopGst") || "");
+      const [shopUpi, setShopUpi] = useState(() => localStorage.getItem("shopUpi") || "");
+      const [billCounter, setBillCounter] = useState(() => Number(localStorage.getItem("billCounter") || "1001"));
+      const [lastSync, setLastSync] = useState(() => localStorage.getItem("lastSync") || "");
+
+      const [bills, setBills] = useState(() => getStored("dharamBills", []));
+      const [expenses, setExpenses] = useState(() => getStored("dharamExpenses", []));
+
+      const [custName, setCustName] = useState("");
+      const [custMobile, setCustMobile] = useState("");
+      const [category, setCategory] = useState("Windows");
+      const [subItem, setSubItem] = useState(CATEGORIES.Windows[0]);
+      const [width, setWidth] = useState("");
+      const [height, setHeight] = useState("");
+      const [qty, setQty] = useState("1");
+      const [rate, setRate] = useState("");
+      const [unit, setUnit] = useState("");
+      const [customName, setCustomName] = useState("");
+      const [isRateErr, setIsRateErr] = useState(false);
+      const [useRounding, setUseRounding] = useState(true);
+      const [items, setItems] = useState([]);
+      const [advance, setAdvance] = useState("");
+      const [step, setStep] = useState(1);
+      const [extraNotes, setExtraNotes] = useState("");
+
+      const [transport, setTransport] = useState("");
+      const [fitting, setFitting] = useState("");
+      const [otherName, setOtherName] = useState("");
+      const [otherAmt, setOtherAmt] = useState("");
+
+      const [navTab, setNavTab] = useState("billing");
+      const [searchDues, setSearchDues] = useState("");
+      const [searchExp, setSearchExpense] = useState("");
+      const [masterSearch, setMasterSearch] = useState("");
+      const [syncState, setSyncState] = useState("idle");
+      const [isGenerating, setIsGenerating] = useState(false);
+
+      const [activeBill, setActiveBill] = useState(null);
+      const [activeLedgerModal, setActiveLedgerModal] = useState(null);
+      const [activeMasterLedgerModal, setActiveMasterLedgerModal] = useState(null);
+      const [activeProfitModal, setActiveProfitModal] = useState(null);
+
+      const [editingBillId, setEditingBillId] = useState(null);
+      const [editingBillIdx, setEditingBillIdx] = useState(null);
+      const [editingItemIdx, setEditingItemIdx] = useState(null);
+
+      const [expLinkedId, setExpLinkedId] = useState("");
+      const [expCategory, setExpCategory] = useState("Supplier Bill");
+      const [expName, setExpName] = useState("");
+      const [expTotal, setExpTotal] = useState("");
+      const [expPaid, setExpPaid] = useState("");
+
+      const billRef = useRef(null);
+      const rateInputRef = useRef(null);
+      const widthInputRef = useRef(null);
+
+      useEffect(() => { localStorage.setItem("dharamBills", JSON.stringify(bills)); }, [bills]);
+      useEffect(() => { localStorage.setItem("dharamExpenses", JSON.stringify(expenses)); }, [expenses]);
+
+      // Android Back Button Listener via Native Interface / PopState
+      useEffect(() => {
+        window.onAndroidBack = function() {
+          if (activeBill) {
+            closeBillView();
+            return true;
+          }
+          if (activeLedgerModal || activeMasterLedgerModal || activeProfitModal) {
+            setActiveLedgerModal(null);
+            setActiveMasterLedgerModal(null);
+            setActiveProfitModal(null);
+            return true;
+          }
+          if (editingItemIdx !== null) {
+            setEditingItemIdx(null);
+            setWidth(""); setHeight(""); setQty("1");
+            return true;
+          }
+          if (navTab !== "billing") {
+            setNavTab("billing");
+            return true;
+          }
+          return false; // Let native app minimize/close
+        };
+      }, [activeBill, activeLedgerModal, activeMasterLedgerModal, activeProfitModal, editingItemIdx, navTab]);
+
+      const isHardwareOrRepair = category === "Hardware" || category === "Repairing";
+
+      const filteredDues = useMemo(() => {
+        let q = searchDues.trim().toLowerCase();
+        if (!q) return [...bills].reverse();
+        return [...bills].reverse().filter(b => b.name.toLowerCase().includes(q) || b.mobile.includes(q) || b.billNo.toLowerCase().includes(q));
+      }, [bills, searchDues]);
+
+      const filteredExpenses = useMemo(() => {
+        let q = searchExp.trim().toLowerCase();
+        if (!q) return [...expenses].reverse();
+        return [...expenses].reverse().filter(e => e.name.toLowerCase().includes(q) || e.category.toLowerCase().includes(q));
+      }, [expenses, searchExp]);
+
+      const reportStats = useMemo(() => {
+        let rec = 0, pay = 0, expP = 0, todayCol = 0, today = getFormattedDate();
+        bills.forEach(b => {
+          rec += (b.pending || 0);
+          b.transactions?.forEach(t => {
+            if (t.date === today && t.credit > 0) todayCol += t.credit;
+          });
+        });
+        expenses.forEach(e => {
+          pay += (e.pending || 0);
+          expP += (e.paid || 0);
+        });
+        return { rec, pay, expPaid: expP, todayCol };
+      }, [bills, expenses]);
+
+      const itemsTotal = useMemo(() => items.reduce((sum, item) => sum + item.t, 0), [items]);
+
+      const extraChargesObj = useMemo(() => {
+        let t = parseFloat(transport) || 0;
+        let f = parseFloat(fitting) || 0;
+        let oA = parseFloat(otherAmt) || 0;
+        let oN = otherName.trim();
+        return { transport: t, fitting: f, otherAmt: oA, otherName: oN, total: t + f + oA };
+      }, [transport, fitting, otherName, otherAmt]);
+
+      const grandTotal = useMemo(() => itemsTotal + extraChargesObj.total, [itemsTotal, extraChargesObj.total]);
+
+      const sqftCalc = useMemo(() => {
+        if (isHardwareOrRepair) return null;
+        let w = parseFloat(width) || 0;
+        let h = parseFloat(height) || 0;
+        let q = parseFloat(qty) || 1;
+        if (w <= 0 || h <= 0) return null;
+        let cw = w, ch = h;
+        if (useRounding) {
+          cw = Math.ceil(w / 3) * 3;
+          ch = Math.ceil(h / 3) * 3;
+        }
+        let roundedSqft = (cw * ch / 144) * q;
+        let rawSqft = (w * h / 144) * q;
+        return { raw: rawSqft, rounded: roundedSqft, cw, ch };
+      }, [width, height, qty, useRounding, isHardwareOrRepair]);
+
+      const changeCategory = (cat) => {
+        setCategory(cat);
+        const subList = CATEGORIES[cat] || [];
+        setSubItem(subList[0] || "");
+      };
+
+      const addItem = () => {
+        let w = parseFloat(width) || 0;
+        let h = parseFloat(height) || 0;
+        let r = parseFloat(rate);
+        let q = parseFloat(qty) || 1;
+
+        if (!isHardwareOrRepair && (w <= 0 || h <= 0)) {
+          alert("⚠️ Width / Height સાચા નાખો ( > 0 )");
+          return;
+        }
+        if (!unit) {
+          alert("⚠️ Unit Select કરો - Per SqFt / Per Piece");
+          return;
+        }
+        if (!(r > 0)) {
+          alert("⚠️ Rate > 0 હોવો જોઈએ");
+          return;
+        }
+        if (!(q > 0)) {
+          alert("⚠️ Qty > 0 હોવી જોઈએ");
+          return;
+        }
+
+        let sq = 0, total = 0, cw = w, ch = h;
+        if (useRounding && !isHardwareOrRepair && unit === "SqFt") {
+          cw = Math.ceil(w / 3) * 3;
+          ch = Math.ceil(h / 3) * 3;
+        }
+
+        if (isHardwareOrRepair || unit === "Piece") {
+          total = Math.round(r * q);
+        } else {
+          sq = (cw * ch / 144) * q;
+          total = Math.round(sq * r);
+        }
+
+        let finalName = customName.trim() || `${category} - ${subItem}`;
+        let newItem = {
+          n: finalName, cat: category, sub: subItem,
+          w: w, h: h, q: q, sq: sq > 0 ? sq.toFixed(2) : "-",
+          r: r, t: total, u: unit
+        };
+
+        if (editingItemIdx !== null) {
+          setItems(items.map((it, idx) => idx === editingItemIdx ? newItem : it));
+          setEditingItemIdx(null);
+        } else {
+          setItems([...items, newItem]);
+        }
+
+        setWidth(""); setHeight(""); setQty("1");
+        setTimeout(() => widthInputRef.current?.focus(), 50);
+      };
+
+      const startEditItem = (idx) => {
+        let item = items[idx];
+        setCategory(item.cat);
+        setSubItem(item.sub);
+        setWidth(item.w ? String(item.w) : "");
+        setHeight(item.h ? String(item.h) : "");
+        setQty(String(item.q));
+        setRate(String(item.r));
+        setUnit(item.u);
+        let defaultN = `${item.cat} - ${item.sub}`;
+        setCustomName(item.n !== defaultN ? item.n : "");
+        setEditingItemIdx(idx);
+      };
+
+      const deleteItem = (idx) => {
+        if (editingItemIdx === idx) setEditingItemIdx(null);
+        setItems(items.filter((_, i) => i !== idx));
+      };
+
+      const startEditBill = (idx) => {
+        let bill = bills[idx];
+        if (!bill) return;
+        setEditingBillId(bill.id);
+        setEditingBillIdx(idx);
+        setCustName(bill.name === "Cash Customer" ? "" : bill.name);
+        setCustMobile(bill.mobile || "");
+        setAdvance(String(bill.advance || ""));
+        setExtraNotes(bill.extraNotes || "");
+        if (bill.extraCharges) {
+          setTransport(bill.extraCharges.transport ? String(bill.extraCharges.transport) : "");
+          setFitting(bill.extraCharges.fitting ? String(bill.extraCharges.fitting) : "");
+          setOtherName(bill.extraCharges.otherName || "");
+          setOtherAmt(bill.extraCharges.otherAmt ? String(bill.extraCharges.otherAmt) : "");
+        } else {
+          setTransport(""); setFitting(""); setOtherName(""); setOtherAmt("");
+        }
+        setItems(bill.items ? [...bill.items] : []);
+        setStep(1);
+        setNavTab("billing");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      };
+
+      const cancelEditBill = () => {
+        setEditingBillId(null);
+        setEditingBillIdx(null);
+        setEditingItemIdx(null);
+        setItems([]); setCustName(""); setCustMobile("");
+        setAdvance(""); setExtraNotes(""); setTransport(""); setFitting(""); setOtherName(""); setOtherAmt("");
+      };
+
+      const generateBill = (type) => {
+        if (items.length === 0) {
+          alert("પહેલા આઈટમ Add કરો");
+          return;
+        }
+        let gTot = grandTotal;
+        let adv = parseFloat(advance) || 0;
+        if (adv > gTot) {
+          alert("Advance Total કરતા વધારે ન હોય!");
+          return;
+        }
+
+        if (editingBillId !== null && type === "final") {
+          let targetIdx = editingBillIdx !== null ? editingBillIdx : bills.findIndex(b => b.id === editingBillId);
+          if (targetIdx < 0) {
+            alert("Original bill not found");
+            return;
+          }
+          let orig = bills[targetIdx];
+          let pend = Math.max(0, gTot - adv);
+          let txs = [...(orig.transactions || [])];
+
+          if (txs.length === 0) {
+            txs = [{ id: Date.now(), date: orig.date, desc: "Bill Created", debit: gTot, credit: adv, balance: pend }];
+          } else {
+            txs[0] = { ...txs[0], debit: gTot, credit: adv, balance: gTot - adv, desc: "Bill Edited - Total Updated" };
+          }
+
+          let updatedBill = {
+            ...orig,
+            name: custName.trim() || "Cash Customer",
+            mobile: custMobile.trim(),
+            total: gTot,
+            advance: adv,
+            pending: pend,
+            items: [...items],
+            transactions: txs,
+            extraNotes: extraNotes.trim(),
+            extraCharges: { transport: extraChargesObj.transport, fitting: extraChargesObj.fitting, otherName: extraChargesObj.otherName, otherAmt: extraChargesObj.otherAmt }
+          };
+
+          let newBills = bills.map((b, i) => i === targetIdx ? updatedBill : b);
+          setBills(newBills);
+          setActiveBill({ ...updatedBill, billType: "final" });
+          cancelEditBill();
+          alert("✅ Bill Updated Successfully!");
+          return;
+        }
+
+        let billNo = `DW-${billCounter}`;
+        let newBill = {
+          id: Date.now(),
+          billNo: billNo,
+          date: getFormattedDate(),
+          name: custName.trim() || "Cash Customer",
+          mobile: custMobile.trim(),
+          total: gTot,
+          advance: adv,
+          pending: gTot - adv,
+          items: [...items],
+          transactions: [{ id: Date.now(), date: getFormattedDate(), desc: type === "final" ? "New Bill" : "Estimate", debit: gTot, credit: adv, balance: gTot - adv }],
+          billType: type,
+          extraNotes: extraNotes.trim(),
+          extraCharges: { transport: extraChargesObj.transport, fitting: extraChargesObj.fitting, otherName: extraChargesObj.otherName, otherAmt: extraChargesObj.otherAmt }
+        };
+
+        setActiveBill(newBill);
+
+        if (type === "final") {
+          setBills([...bills, newBill]);
+          let nextCounter = billCounter + 1;
+          setBillCounter(nextCounter);
+          localStorage.setItem("billCounter", String(nextCounter));
+        }
+      };
+
+      const closeBillView = () => {
+        setActiveBill(null);
+        if (activeBill?.billType === "final") {
+          setItems([]); setCustName(""); setCustMobile(""); setAdvance(""); setExtraNotes(""); setTransport(""); setFitting(""); setOtherName(""); setOtherAmt("");
+        }
+      };
+
+      const receivePayment = (idx) => {
+        let b = bills[idx];
+        if (!b) return;
+        let pStr = prompt(`Customer: ${b.name}\nPending: ${formatCurrency(b.pending)}\nકેટલા રૂપિયા Receive થયા?`, String(b.pending));
+        if (!pStr) return;
+        let amt = parseFloat(pStr);
+        if (isNaN(amt) || amt <= 0 || amt > b.pending) {
+          alert("Invalid amount");
+          return;
+        }
+
+        let newBills = bills.map((bill, i) => {
+          if (i !== idx) return bill;
+          let newPend = bill.pending - amt;
+          let tx = { id: Date.now(), date: getFormattedDate(), desc: "Cash Received", debit: 0, credit: amt, balance: newPend };
+          return { ...bill, advance: bill.advance + amt, pending: newPend, transactions: [...(bill.transactions || []), tx] };
+        });
+        setBills(newBills);
+      };
+
+      const generatePdf = async () => {
+        if (!billRef.current) return;
+        setIsGenerating(true);
+        try {
+          let opt = {
+            margin: 5,
+            filename: `${activeBill?.billNo || "bill"}.pdf`,
+            image: { type: "jpeg", quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true },
+            jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+          };
+          if (window.html2pdf) {
+            let pdfBlob = await window.html2pdf().set(opt).from(billRef.current).outputPdf("blob");
+            let file = new File([pdfBlob], `${activeBill?.billNo || "bill"}.pdf`, { type: "application/pdf" });
+            if (window.AndroidInterface && window.AndroidInterface.shareFile) {
+              let reader = new FileReader();
+              reader.onload = function() {
+                let base64 = reader.result.split(',')[1];
+                window.AndroidInterface.shareFile(base64, `${activeBill?.billNo}.pdf`, "application/pdf");
+              };
+              reader.readAsDataURL(file);
+            } else if (navigator.canShare && navigator.canShare({ files: [file] })) {
+              await navigator.share({ files: [file], title: activeBill?.billNo });
+            } else {
+              window.html2pdf().set(opt).from(billRef.current).save();
+            }
+          } else {
+            alert("PDF library loading error");
+          }
+        } catch (err) {
+          alert("PDF generation failed: " + err.message);
+        }
+        setIsGenerating(false);
+      };
+
+      const generateImageAndShare = async () => {
+        if (!billRef.current) return;
+        setIsGenerating(true);
+        try {
+          let canvas = await window.html2canvas(billRef.current, { scale: 2, useCORS: true });
+          let base64Image = canvas.toDataURL("image/png");
+          if (window.AndroidInterface && window.AndroidInterface.shareFile) {
+            let rawBase64 = base64Image.split(',')[1];
+            window.AndroidInterface.shareFile(rawBase64, `${activeBill?.billNo || "bill"}.png`, "image/png");
+          } else {
+            let res = await fetch(base64Image);
+            let blob = await res.blob();
+            let file = new File([blob], `${activeBill?.billNo || "bill"}.png`, { type: "image/png" });
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+              await navigator.share({ files: [file], title: activeBill?.billNo });
+            } else {
+              let a = document.createElement("a");
+              a.href = base64Image;
+              a.download = `${activeBill?.billNo}.png`;
+              a.click();
+            }
+          }
+        } catch (err) {
+          alert("Image generation failed");
+        }
+        setIsGenerating(false);
+      };
+
+      const exportBackup = () => {
+        let data = {
+          bills, expenses, shopName, shopMobile, shopAddress, shopGst, shopUpi, billCounter,
+          exportedAt: new Date().toISOString()
+        };
+        let blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+        let url = URL.createObjectURL(blob);
+        let a = document.createElement("a");
+        a.href = url;
+        a.download = `dharam_backup_${getFormattedDate()}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+      };
+
+      const importBackup = (e) => {
+        let file = e.target.files?.[0];
+        if (!file) return;
+        let reader = new FileReader();
+        reader.onload = () => {
+          try {
+            let data = JSON.parse(reader.result);
+            if (data.bills) setBills(data.bills);
+            if (data.expenses) setExpenses(data.expenses);
+            if (data.shopName) setShopName(data.shopName);
+            if (data.shopMobile) setShopMobile(data.shopMobile);
+            if (data.shopAddress) setShopAddress(data.shopAddress);
+            if (data.shopGst) setShopGst(data.shopGst);
+            if (data.shopUpi) setShopUpi(data.shopUpi);
+            if (data.billCounter) setBillCounter(data.billCounter);
+            alert("✅ Backup Restored Successfully!");
+          } catch {
+            alert("❌ Invalid Backup File");
+          }
+        };
+        reader.readAsText(file);
+      };
+
+      return (
+        <div class="app-root">
+          <div class="topbar">
+            <div class="topbar-inner">
+              <div class="brand">
+                <div class="brand-badge">D</div>
+                <div>
+                  <h1>{shopName}</h1>
+                  <p>Dharam Window ERP • Mobile</p>
+                </div>
+              </div>
+              <div class="sync-pill ok">
+                <span>📱</span> Offline Mode
+              </div>
+            </div>
+          </div>
+
+          <div class="container">
+            {navTab === "billing" && (
+              <div class="card">
+                {editingBillId !== null && (
+                  <div class="edit-banner">
+                    <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
+                      <span style={{fontSize: '18px'}}>✏️</span>
+                      <b>Editing Bill: {bills.find(b => b.id === editingBillId)?.billNo}</b>
+                    </div>
+                    <button class="btn btn-ghost" style={{padding: '6px 10px', fontSize: '12px', background: 'white'}} onClick={cancelEditBill}>
+                      ❌ Cancel Edit
+                    </button>
+                  </div>
+                )}
+
+                <div class="row-2col">
+                  <div>
+                    <label>Customer Name / ગ્રાહક નામ</label>
+                    <input class="input" value={custName} onChange={e => setCustName(e.target.value)} placeholder="e.g. Patel Brothers" />
+                  </div>
+                  <div>
+                    <label>Mobile Number</label>
+                    <input class="input" value={custMobile} onChange={e => setCustMobile(e.target.value)} placeholder="10 digit" inputMode="numeric" maxLength="10" />
+                  </div>
+                </div>
+
+                <div style={{height: '1px', background: 'var(--border)', margin: '14px 0'}}></div>
+
+                <div class="row-2col">
+                  <div>
+                    <label>Category</label>
+                    <select class="input" value={category} onChange={e => changeCategory(e.target.value)}>
+                      {Object.keys(CATEGORIES).map(cat => <option key={cat} value={cat}>{cat}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label>Sub Item / પ્રોડક્ટ</label>
+                    <select class="input" value={subItem} onChange={e => setSubItem(e.target.value)}>
+                      {(CATEGORIES[category] || []).map(sub => <option key={sub} value={sub}>{sub}</option>)}
+                    </select>
+                  </div>
+                </div>
+
+                <div class="row-2col" style={{marginTop: '10px'}}>
+                  <div>
+                    <label>Rate (₹)</label>
+                    <input ref={rateInputRef} type="number" class="input" value={rate} onChange={e => setRate(e.target.value)} placeholder="₹ 0" />
+                  </div>
+                  <div>
+                    <label>Unit</label>
+                    <select class="input" value={unit} onChange={e => setUnit(e.target.value)}>
+                      <option value="">Select Unit</option>
+                      <option value="SqFt">Per SqFt</option>
+                      <option value="Piece">Per Piece</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div style={{marginTop: '10px'}}>
+                  <label>Custom Item Name <span style={{fontWeight: 400, color: '#888', fontSize: '11px'}}>(Optional)</span></label>
+                  <input type="text" class={`input custom-input ${customName.trim() ? 'filled' : ''}`} value={customName} onChange={e => setCustomName(e.target.value)} placeholder="Enter Item Name" />
+                </div>
+
+                <div class="row-3col" style={{marginTop: '10px'}}>
+                  <div>
+                    <label>Width (W)</label>
+                    <input ref={widthInputRef} class="input" value={width} onChange={e => setWidth(e.target.value)} placeholder="Inch" type="number" disabled={isHardwareOrRepair} />
+                  </div>
+                  <div>
+                    <label>Height (H)</label>
+                    <input class="input" value={height} onChange={e => setHeight(e.target.value)} placeholder="Inch" type="number" disabled={isHardwareOrRepair} />
+                  </div>
+                  <div>
+                    <label>Qty</label>
+                    <input class="input" value={qty} onChange={e => setQty(e.target.value)} type="number" min="1" />
+                  </div>
+                </div>
+
+                {sqftCalc && !isHardwareOrRepair && (
+                  <div style={{marginTop: '8px'}}>
+                    <span class="sqft-live">📐 SqFt: {sqftCalc.rounded.toFixed(2)}</span>
+                  </div>
+                )}
+
+                <label class="compact-check">
+                  <input type="checkbox" checked={useRounding} onChange={e => setUseRounding(e.target.checked)} disabled={isHardwareOrRepair} />
+                  <span>3-Inch Rounding ✅</span>
+                </label>
+
+                <div style={{marginTop: '14px', display: 'flex', gap: '8px'}}>
+                  <button class="btn btn-success add-item-btn" onClick={addItem}>
+                    {editingItemIdx !== null ? "💾 Update Item" : "🛒 Add Item"}
+                  </button>
+                  {items.length > 0 && (
+                    <button class="btn btn-ghost" onClick={() => setItems([])}>🧹 Clear</button>
+                  )}
+                </div>
+
+                {items.length > 0 && (
+                  <div style={{marginTop: '16px'}}>
+                    <div class="h2" style={{fontSize: '14px'}}>📦 Items List ({formatCurrency(itemsTotal)})</div>
+                    <div class="table-wrap">
+                      <table>
+                        <thead>
+                          <tr>
+                            <th>Item</th>
+                            <th>Size</th>
+                            <th>Qty</th>
+                            <th>SqFt</th>
+                            <th>Rate</th>
+                            <th>Total</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {items.map((it, idx) => (
+                            <tr key={idx} class={editingItemIdx === idx ? 'edit-row' : ''}>
+                              <td><b>{it.n}</b><br/><small>{it.u}</small></td>
+                              <td>{it.w ? `${it.w} x ${it.h}` : '-'}</td>
+                              <td>{it.q}</td>
+                              <td>{it.sq}</td>
+                              <td>₹{it.r}</td>
+                              <td><b>₹{it.t}</b></td>
+                              <td>
+                                <button class="btn btn-ghost" style={{padding: '4px 8px'}} onClick={() => startEditItem(idx)}>✏️</button>
+                                <button class="btn btn-ghost" style={{padding: '4px 8px'}} onClick={() => deleteItem(idx)}>❌</button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <div style={{background: '#f8fafc', border: '1px solid var(--border)', borderRadius: '12px', padding: '12px', marginTop: '14px'}}>
+                      <label style={{marginTop: 0}}>🚚 Extra Charges (ભાડું / fitting)</label>
+                      <div class="row-2col" style={{marginTop: '6px'}}>
+                        <input type="number" class="input" value={transport} onChange={e => setTransport(e.target.value)} placeholder="Transport ₹" />
+                        <input type="number" class="input" value={fitting} onChange={e => setFitting(e.target.value)} placeholder="Fitting ₹" />
+                      </div>
+                    </div>
+
+                    <div style={{marginTop: '14px', background: '#f8fafc', padding: '12px', borderRadius: '12px'}}>
+                      <label style={{marginTop: 0}}>Advance / જમા</label>
+                      <input class="input" value={advance} onChange={e => setAdvance(e.target.value)} placeholder="₹ 0" type="number" />
+
+                      <div style={{display: 'flex', gap: '8px', marginTop: '12px'}}>
+                        <button class="btn btn-ghost" style={{flex: 1}} onClick={() => generateBill("estimate")}>📝 Estimate</button>
+                        <button class="btn btn-primary" style={{flex: 1}} onClick={() => generateBill("final")}>
+                          {editingBillId !== null ? "💾 UPDATE BILL" : "📄 Final Bill"}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {navTab === "history" && (
+              <div class="card">
+                <div class="h2">📜 Dues & Bill History</div>
+                <div class="search" style={{marginTop: '10px'}}>
+                  <span>🔍</span>
+                  <input value={searchDues} onChange={e => setSearchDues(e.target.value)} placeholder="Search customer, mobile, bill no..." />
+                </div>
+
+                <div class="table-wrap" style={{marginTop: '12px'}}>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Bill</th>
+                        <th>Customer</th>
+                        <th>Pending</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredDues.map((b) => {
+                        let origIdx = bills.findIndex(x => x.id === b.id);
+                        return (
+                          <tr key={b.id}>
+                            <td><b>{b.billNo}</b><br/><small>{b.date}</small></td>
+                            <td><b>{b.name}</b><br/><small>{b.mobile}</small></td>
+                            <td><b style={{color: b.pending > 0 ? '#dc2626' : '#16a34a'}}>{formatCurrency(b.pending)}</b></td>
+                            <td>
+                              <div style={{display: 'flex', gap: '4px', flexDirection: 'column'}}>
+                                <button class="btn btn-edit-prominent" style={{padding: '4px 8px', fontSize: '11px'}} onClick={() => startEditBill(origIdx)}>✏️ Edit</button>
+                                {b.pending > 0 && <button class="btn btn-success" style={{padding: '4px 8px', fontSize: '11px'}} onClick={() => receivePayment(origIdx)}>💵 Pay</button>}
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {navTab === "dashboard" && (
+              <div class="card">
+                <div class="h2">📊 Financial Overview</div>
+                <div class="dash-grid" style={{marginTop: '12px'}}>
+                  <div class="dash-card g1">
+                    <b>Receivables / લેવાનું</b>
+                    <span class="amt">{formatCurrency(reportStats.rec)}</span>
+                  </div>
+                  <div class="dash-card g2">
+                    <b>Payables / દેવાનું</b>
+                    <span class="amt">{formatCurrency(reportStats.pay)}</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {navTab === "settings" && (
+              <div class="card">
+                <div class="h2">⚙️ Settings</div>
+                <label>Shop Name</label>
+                <input class="input" value={shopName} onChange={e => setShopName(e.target.value)} />
+                <label>Mobile</label>
+                <input class="input" value={shopMobile} onChange={e => setShopMobile(e.target.value)} />
+                <label>Address</label>
+                <input class="input" value={shopAddress} onChange={e => setShopAddress(e.target.value)} />
+
+                <div style={{marginTop: '20px'}}>
+                  <div class="h2" style={{fontSize: '16px'}}>💾 Local Backup & Restore</div>
+                  <div style={{display: 'flex', gap: '8px', marginTop: '10px'}}>
+                    <button class="btn btn-ghost" style={{flex: 1}} onClick={exportBackup}>📥 Export Backup</button>
+                    <label class="btn btn-ghost" style={{flex: 1, cursor: 'pointer'}}>
+                      📤 Import
+                      <input type="file" accept=".json" style={{display: 'none'}} onChange={importBackup} />
+                    </label>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Active Bill Preview Overlay */}
+          {activeBill && (
+            <div style={{position: 'fixed', inset: 0, zIndex: 60, background: '#e2e8f0', overflow: 'auto', padding: '12px'}}>
+              <div style={{maxWidth: '800px', margin: 'auto'}}>
+                <div style={{display: 'flex', gap: '8px', marginBottom: '12px'}}>
+                  <button class="btn btn-success" style={{flex: 1}} onClick={generateImageAndShare} disabled={isGenerating}>📱 Share Image</button>
+                  <button class="btn btn-danger" style={{flex: 1}} onClick={generatePdf} disabled={isGenerating}>📄 Share PDF</button>
+                  <button class="btn btn-ghost" onClick={closeBillView}>⬅ Back</button>
+                </div>
+
+                <div ref={billRef} class="bill-shell">
+                  {activeBill.billType === "estimate" && <div class="watermark">ESTIMATE</div>}
+                  <div style={{textAlign: 'center', borderBottom: '2px solid #0f172a', paddingBottom: '12px', marginBottom: '12px'}}>
+                    <h1 style={{margin: 0, color: '#dc2626', fontSize: '24px'}}>{shopName}</h1>
+                    <div style={{fontSize: '12px', color: '#334155'}}>{shopAddress}</div>
+                    <div style={{fontWeight: 700, fontSize: '13px'}}>Mo: {shopMobile}</div>
+                  </div>
+
+                  <div style={{display: 'flex', justifyContent: 'space-between', fontSize: '13px'}}>
+                    <div><b>Bill No:</b> {activeBill.billNo}<br/><b>Customer:</b> {activeBill.name}</div>
+                    <div style={{textAlign: 'right'}}><b>Date:</b> {activeBill.date}</div>
+                  </div>
+
+                  <table style={{width: '100%', marginTop: '12px', borderCollapse: 'collapse', border: '1px solid #0f172a'}}>
+                    <thead>
+                      <tr style={{background: '#f1f5f9'}}>
+                        <th style={{border: '1px solid #0f172a', padding: '6px'}}>Item</th>
+                        <th style={{border: '1px solid #0f172a', padding: '6px'}}>Size</th>
+                        <th style={{border: '1px solid #0f172a', padding: '6px'}}>Qty</th>
+                        <th style={{border: '1px solid #0f172a', padding: '6px'}}>SqFt</th>
+                        <th style={{border: '1px solid #0f172a', padding: '6px'}}>Rate</th>
+                        <th style={{border: '1px solid #0f172a', padding: '6px'}}>Total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {activeBill.items.map((it, i) => (
+                        <tr key={i}>
+                          <td style={{border: '1px solid #0f172a', padding: '6px'}}><b>{it.n}</b></td>
+                          <td style={{border: '1px solid #0f172a', padding: '6px'}}>{it.w ? `${it.w}x${it.h}` : '-'}</td>
+                          <td style={{border: '1px solid #0f172a', padding: '6px'}}>{it.q}</td>
+                          <td style={{border: '1px solid #0f172a', padding: '6px'}}>{it.sq}</td>
+                          <td style={{border: '1px solid #0f172a', padding: '6px'}}>₹{it.r}</td>
+                          <td style={{border: '1px solid #0f172a', padding: '6px'}}><b>₹{it.t}</b></td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+
+                  <div style={{display: 'flex', justifyContent: 'flex-end', marginTop: '12px'}}>
+                    <div style={{width: '260px', border: '2px solid #0f172a', padding: '10px', fontSize: '13px'}}>
+                      <div style={{display: 'flex', justifyContent: 'space-between'}}><span>Total:</span><b>{formatCurrency(activeBill.total)}</b></div>
+                      <div style={{display: 'flex', justifyContent: 'space-between', color: '#16a34a'}}><span>Advance:</span><span>- {formatCurrency(activeBill.advance)}</span></div>
+                      <div style={{display: 'flex', justifyContent: 'space-between', color: '#dc2626', fontWeight: 800, borderTop: '1px solid #0f172a', paddingTop: '4px'}}><span>Balance:</span><span>{formatCurrency(activeBill.pending)}</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div class="bottom-nav">
+            <button class={`nav-btn ${navTab === 'billing' ? 'act' : ''}`} onClick={() => setNavTab('billing')}>
+              <span class="ico">🧾</span><span>Bill</span>
+            </button>
+            <button class={`nav-btn ${navTab === 'history' ? 'act' : ''}`} onClick={() => setNavTab('history')}>
+              <span class="ico">📜</span><span>Dues</span>
+            </button>
+            <button class={`nav-btn ${navTab === 'dashboard' ? 'act' : ''}`} onClick={() => setNavTab('dashboard')}>
+              <span class="ico">📊</span><span>Report</span>
+            </button>
+            <button class={`nav-btn ${navTab === 'settings' ? 'act' : ''}`} onClick={() => setNavTab('settings')}>
+              <span class="ico">⚙️</span><span>Set</span>
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>

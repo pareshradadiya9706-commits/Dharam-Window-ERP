@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- D Letter Outer Frame -->
+    <path
+        android:pathData="M24,24 h22 c14,0 24,9 24,23 s-10,23 -24,23 h-22 z"
+        android:fillColor="#FFFFFF" />
+
+    <!-- D Letter Inner Cutout -->
+    <path
+        android:pathData="M32,32 h14 c8,0 14,5 14,15 s-6,15 -14,15 h-14 z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="32"
+                android:startY="32"
+                android:endX="60"
+                android:endY="62"
+                android:type="linear">
+                <item android:color="#0B2B6B" android:offset="0.0" />
+                <item android:color="#031238" android:offset="1.0" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Metallic Window Frame inside D -->
+    <path
+        android:pathData="M25,33 h26 v30 h-26 z"
+        android:fillColor="#B0C4DE"
+        android:strokeColor="#1E293B"
+        android:strokeWidth="1.2" />
+
+    <!-- Window Glass Left Sash -->
+    <path
+        android:pathData="M27,35 h10 v26 h-10 z"
+        android:fillColor="#93C5FD"
+        android:strokeColor="#334155"
+        android:strokeWidth="0.8" />
+
+    <!-- Window Glass Right Sash -->
+    <path
+        android:pathData="M39,35 h10 v26 h-10 z"
+        android:fillColor="#BFDBFE"
+        android:strokeColor="#334155"
+        android:strokeWidth="0.8" />
+
+    <!-- Glass Reflection Line -->
+    <path
+        android:pathData="M28,37 L35,59 M40,37 L47,59"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.2"
+        android:strokeLineCap="round" />
+
+    <!-- W Letter -->
+    <path
+        android:pathData="M56,36 l7,34 h8 l6,-20 l6,20 h8 l7,-34 h-8 l-4,22 l-6,-22 h-6 l-6,22 l-4,-22 z"
+        android:fillColor="#E2E8F0"
+        android:strokeColor="#94A3B8"
+        android:strokeWidth="0.5" />
+
+    <!-- Curved Swoosh Line below DW -->
+    <path
+        android:pathData="M18,72 Q50,67 90,62 Q50,71 18,72 z"
+        android:fillColor="#FFFFFF" />
+
+    <!-- DHARAM Text (Represented crisply) -->
+    <path
+        android:pathData="M22,76 h5 v3 h-3 v3 h3 v3 h-5 z M29,76 h2 v9 h-2 z M33,76 h5 v3 h-3 v3 h3 v3 h-5 z M40,76 h4 l2,9 h-2 l-1,-2 h-2 l-1,2 h-2 z M47,76 h5 v3 h-3 v3 h3 v3 h-5 z M54,76 h2 l2,5 l2,-5 h2 v9 h-2 v-6 l-2,5 h-1 l-2,-5 v6 h-2 z"
+        android:fillColor="#FFFFFF" />
+
+    <!-- WINDOW Text Accent (Gold) -->
+    <path
+        android:pathData="M22,88 h2 l1,4 l1,-4 h2 l1,4 l1,-4 h2 l-2,6 h-2 l-1,-4 l-1,4 h-2 z M34,88 h2 v6 h-2 z M38,88 h2 l3,4 v-4 h2 v6 h-2 l-3,-4 v4 h-2 z M46,88 h3 c2,0 3,1 3,3 s-1,3 -3,3 h-3 z M54,88 c2,0 3,1 3,3 s-1,3 -3,3 s-3,-1 -3,-3 s1,-3 3,-3 z M60,88 h2 l1,4 l1,-4 h2 l1,4 l1,-4 h2 l-2,6 h-2 l-1,-4 l-1,4 h-2 z"
+        android:fillColor="#FACC15" />
+
+</vector>
+
